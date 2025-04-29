@@ -1,15 +1,24 @@
 import { connectDB } from "@/db/config";
 import bcrypt from "bcrypt";
 import { User, validate } from "@/db/models/user";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./[...nextauth]";
 
 export default async function handler(req, res) {
+
+    const session = await getServerSession(authOptions);
+
     try{
         if (req.method === "POST") {
             
             await connectDB();
 
             const { firstName, lastName, email, password } = req.body;
-            const { error } = validate({ firstName, lastName, email, password });
+            const { error } = validate({ email, password });
+
+            if (session?.user?.role !== "admin") {
+                return res.status(403).json({ error: "Access denied" });
+            }
 
             if (error) {
                 return res.status(400).json({ error: error.details[0].message });

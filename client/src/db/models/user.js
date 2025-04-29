@@ -24,15 +24,12 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['user', 'admin'],
-        default: 'user',
+        default: 'admin',
     },
 }, { timestamps: true });
 
 const validate = (data) => {
     const schema = Joi.object({
-        firstName: Joi.string().min(5).max(50).required(),
-        lastName: Joi.string().min(5).max(50).required(),
         email: Joi.string().min(5).max(255).required().email(),
         password: passwordComplexity().required()
     });

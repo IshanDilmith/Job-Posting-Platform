@@ -13,44 +13,38 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // Connect to the database
         await connectDB();
 
-        // Find the user by email
         const user = await User.findOne({ email: credentials.email });
         if (!user) {
           throw new Error("Invalid email or password");
         }
 
-        // Compare the password
         const isMatch = await bcrypt.compare(credentials.password, user.password);
         if (!isMatch) {
           throw new Error("Invalid email or password");
         }
 
-        // If credentials are valid, return the user object
         return { id: user._id, email: user.email, role: user.role };
       },
     }),
   ],
   pages: {
-    signIn: '/login', // Redirect to your custom login page
+    signIn: '/login',
   },
   session: {
-    strategy: 'jwt', // Use JWT tokens
+    strategy: 'jwt',
   },
   callbacks: {
     async jwt({ token, user }) {
-      // If user is available, add to the token
       if (user) {
         token.id = user.id;
         token.email = user.email;
-        token.role = user.role; // Store the role in the token
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
-      // Attach the token properties to the session
       if (token) {
         session.user.id = token.id;
         session.user.email = token.email;
