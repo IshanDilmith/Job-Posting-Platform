@@ -1,20 +1,30 @@
-// src/middleware.js
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from './pages/api/auth/[...nextauth]';
+import { withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
 
-export function middleware(request) {
+export default withAuth(
+    function middleware(request) {
+        // Get the user's role from the token
+        const token = request.nextauth.token;
+        const isAdmin = token?.role === "admin";
+        const isAdminRoute = request.nextUrl.pathname.startsWith('/admin');
 
-    const session = getServerSession(authOptions);
+        // Redirect non-admin users trying to access admin routes
+        if (isAdminRoute && !isAdmin) {
+            return NextResponse.redirect(new URL('/login', request.url));
+        }
 
-    const isAdmin = session?.user?.role === 'admin';
-    console.log("isadmin", isAdmin);
-
-    const isAdminRoute = request.nextUrl.pathname.startsWith('/admin');
-
-    if (isAdminRoute && !isAdmin) {
-        return NextResponse.redirect(new URL('/login', request.url));
+        return NextResponse.next();
+    },
+    {
+        callbacks: {
+            authorized: ({ token }) => !!token // Requires authentication for all routes
+        }
     }
+);
 
-    return NextResponse.next();
-}
+// Specify which routes to protect
+export const config = {
+    matcher: [
+        '/admin/:path*',  // Protect all admin routes
+    ]
+};

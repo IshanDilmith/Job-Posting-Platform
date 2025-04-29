@@ -29,7 +29,7 @@ const Login = () => {
             toast.success('Login successful!');
 
             if (session?.user?.role === 'admin') {
-                router.push('/admin/dashboard');
+                router.push('/admin/');
             } else {
                 router.push('/');
             }
