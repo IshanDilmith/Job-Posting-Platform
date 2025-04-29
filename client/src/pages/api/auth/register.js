@@ -6,14 +6,14 @@ import { authOptions } from "./[...nextauth]";
 
 export default async function handler(req, res) {
 
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(req, res, authOptions);
 
     try{
         if (req.method === "POST") {
             
             await connectDB();
 
-            const { firstName, lastName, email, password } = req.body;
+            const { firstName, lastName, email, phoneNumber, password } = req.body;
             const { error } = validate({ email, password });
 
             if (session?.user?.role !== "admin") {
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
             }
 
             const hashedPassword = await bcrypt.hash(password, 10);
-            const newUser = new User({ firstName, lastName, email, password: hashedPassword });
+            const newUser = new User({ firstName, lastName, email, phoneNumber, password: hashedPassword });
             await newUser.save();
 
             return res.status(201).json({ message: "User registered successfully" });
