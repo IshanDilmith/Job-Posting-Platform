@@ -1,8 +1,318 @@
-export default function JobDashboard() {
+'use client';
+
+import { useState, useEffect } from 'react';
+import { PencilIcon, TrashIcon, PlusIcon } from '@heroicons/react/24/outline';
+import toast, { Toaster } from 'react-hot-toast';
+import Spinner from './Spinner';
+
+export default function jobDashboard({jobPosts, isLoading}) {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingJob, setEditingJob] = useState(null);
+
+    const jobCategory = ['Full Stack', 'Front End', 'Back End', 'Data Science', 'Machine Learning', 'DevOps'];
+
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        category: jobCategory[0],
+        questions: [''],
+        emailForNotifications: ''
+    });
+
+    const handleDelete = async (jobId) => {
+        if (window.confirm('Are you sure you want to delete this job?')) {
+            try {
+                const response = await fetch(`/api/job-posting/${jobId}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response.ok) {
+                    toast.success('Job deleted successfully');
+                    fetchJobs();
+                }
+            } catch (error) {
+                toast.error('Failed to delete job');
+            }
+        }
+    };
+
+    const resetForm = () => {
+        setFormData({
+            title: '',
+            description: '',
+            category: '',
+            questions: [''],
+            emailForNotifications: ''
+        });
+    };
+
+    // Add/remove dynamic fields (requirements, questions)
+    const handleArrayFieldAdd = (field) => {
+        setFormData({
+            ...formData,
+            [field]: [...formData[field], '']
+        });
+    };
+
+    const handleArrayFieldRemove = (field, index) => {
+        setFormData({
+            ...formData,
+            [field]: formData[field].filter((_, i) => i !== index)
+        });
+    };
+
+    const handleArrayFieldChange = (field, index, value) => {
+        const newArray = [...formData[field]];
+        newArray[index] = value;
+        setFormData({
+            ...formData,
+            [field]: newArray
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await fetch('/api/job-posting', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            const res = await response.json();
+
+            if (res.success) {
+                toast.success('Job created successfully');
+                fetchJobs();
+                setIsModalOpen(false);
+                resetForm();
+            } else {
+                toast.error(res.error || 'Failed to save job');
+            }
+        } catch (error) {
+            toast.error('Failed to save job');
+        }
+    }
+
+    if (isLoading) {
+        return (
+            <div>
+                <Spinner />
+            </div>
+        );
+    }
+
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h1 className="text-2xl font-bold mb-4">Job Dashboard</h1>
-            <p className="text-gray-700">Welcome to the Job Dashboard!</p>
+        <div className="min-h-screen bg-white py-8">
+            <Toaster />
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Header */}
+                <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-2xl font-bold text-gray-900">Job Management</h1>
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="px-4 py-2 text-sm font-medium text-white bg-[#2563EB] rounded-lg 
+                        hover:bg-[#1E40AF] focus:outline-none focus:ring-2 focus:ring-offset-2 
+                        focus:ring-[#2563EB] transition-colors duration-200"
+                    >
+                        <PlusIcon className="h-5 w-5 inline-block mr-2" />
+                        Add Job
+                    </button>
+                </div>
+
+                {/* Jobs Table */}
+                <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+                    <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                            <tr>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Questions</th>
+                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">E-mail</th>
+                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                            {jobPosts.map((job) => (
+                                <tr key={job._id} className="hover:bg-gray-50">
+                                    <td className="px-6 py-4">
+                                        <div className="text-sm font-medium text-gray-900">{job.title}</div>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <div className="text-sm text-gray-900">{job.description}</div>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <div className="text-sm text-gray-500">{job.category}</div>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <div className="text-sm text-gray-500">{job.questions.join(', ')}</div>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <div className="text-sm text-gray-500">{job.emailForNotifications}</div>
+                                    </td>
+                                    <td className="px-6 py-4 text-right space-x-3">
+                                        <button
+                                            //onClick={() => { }}
+                                            className="text-indigo-600 hover:text-indigo-900"
+                                        >
+                                            <PencilIcon className="h-5 w-5 inline" />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(job._id)}
+                                            className="text-red-600 hover:text-red-900"
+                                        >
+                                            <TrashIcon className="h-5 w-5 inline" />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {/* Job Form Modal */}
+            {isModalOpen && (
+                <>
+                    <div 
+                        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 transition-opacity"
+                        onClick={() => {
+                            setIsModalOpen(false);
+                            setEditingJob(null);
+                            resetForm();
+                        }}
+                    />
+                    <div className="fixed inset-0 z-50 overflow-y-auto">
+                        <div className="flex min-h-full items-center justify-center p-4">
+                            <div 
+                                className="w-full max-w-4xl transform overflow-hidden rounded-xl 
+                                bg-white p-6 text-left shadow-xl transition-all"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">
+                                    {editingJob ? 'Edit Job' : 'Add New Job'}
+                                </h3>
+
+                                {/*Form Fields*/}
+                                <form onSubmit={handleSubmit} className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700">Job Title</label>
+                                        <input
+                                            type="text"
+                                            value={formData.title}
+                                            onChange={(e) => setFormData({...formData, title: e.target.value})}
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm 
+                                            focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700">Description</label>
+                                        <textarea
+                                            value={formData.description}
+                                            onChange={(e) => setFormData({...formData, description: e.target.value})}
+                                            rows={4}
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm 
+                                            focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-1 gap-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700">Category</label>
+                                            <select
+                                                value={formData.category}
+                                                onChange={(e) => setFormData({...formData, category: e.target.value})}
+                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm 
+                                                focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            >
+                                                {jobCategory.map(category => (
+                                                    <option key={category} value={category}>{category}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    {/* Questions */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Questions
+                                        </label>
+                                        {formData.questions.map((question, index) => (
+                                            <div key={index} className="flex gap-2 mb-2">
+                                                <input
+                                                    type="text"
+                                                    value={question}
+                                                    onChange={(e) => handleArrayFieldChange('questions', index, e.target.value)}
+                                                    className="block w-full rounded-md border-gray-300 shadow-sm 
+                                                    focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleArrayFieldRemove('questions', index)}
+                                                    className="text-red-600 hover:text-red-800"
+                                                >
+                                                    Remove
+                                                </button>
+                                            </div>
+                                        ))}
+                                        <button
+                                            type="button"
+                                            onClick={() => handleArrayFieldAdd('questions')}
+                                            className="mt-2 text-sm text-indigo-600 hover:text-indigo-800"
+                                        >
+                                            Add Question
+                                        </button>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700">
+                                            Notification Email
+                                        </label>
+                                        <input
+                                            type="email"
+                                            value={formData.emailForNotifications}
+                                            onChange={(e) => setFormData({...formData, emailForNotifications: e.target.value})}
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm 
+                                            focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            required
+                                        />
+                                    </div>
+
+
+                                    {/* Form Actions */}
+                                    <div className="flex justify-end space-x-3 mt-6">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setIsModalOpen(false);
+                                                setEditingJob(null);
+                                                resetForm();
+                                            }}
+                                            className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-500"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="px-4 py-2 text-sm font-medium text-white bg-[#2563EB] rounded-lg 
+                                            hover:bg-[#1E40AF] focus:outline-none focus:ring-2 focus:ring-offset-2 
+                                            focus:ring-[#2563EB] transition-colors duration-200"
+                                        >
+                                            Create Job Post
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     );
 }
