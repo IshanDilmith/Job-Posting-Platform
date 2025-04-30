@@ -5,6 +5,7 @@ import { PencilIcon, TrashIcon, PlusIcon } from '@heroicons/react/24/outline';
 import toast, { Toaster } from 'react-hot-toast';
 import Spinner from './Spinner';
 import UpdateJobForm from './UpdateJobForm';
+import Tiptap from './Tiptap';
 
 export default function jobDashboard({ jobPosts, isLoading, fetchJobs }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -143,7 +144,10 @@ export default function jobDashboard({ jobPosts, isLoading, fetchJobs }) {
                                         <div className="text-sm font-medium text-gray-900">{job.title}</div>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <div className="text-sm text-gray-900">{job.description}</div>
+                                        <div 
+                                            className="text-sm text-gray-900"
+                                            dangerouslySetInnerHTML={{ __html: job.description }}
+                                        />
                                     </td>
                                     <td className="px-6 py-4">
                                         <div className="text-sm text-gray-500">{job.category}</div>
@@ -235,13 +239,14 @@ export default function jobDashboard({ jobPosts, isLoading, fetchJobs }) {
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700">Description</label>
-                                        <textarea
-                                            value={formData.description}
-                                            onChange={(e) => setFormData({...formData, description: e.target.value})}
-                                            rows={4}
-                                            className="mt-1 bg-gray-100 block w-full rounded-md border-gray-300 shadow-sm 
-                                            focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                            required
+                                        <Tiptap
+                                            content={formData.description}
+                                            onChange={(newContent) => {
+                                                setFormData(prev => ({
+                                                    ...prev,
+                                                    description: newContent
+                                                }))
+                                            }}
                                         />
                                     </div>
 
