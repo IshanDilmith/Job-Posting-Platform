@@ -1,19 +1,40 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export default function UpdateJobForm ({ job, onClose, fetchJobs, jobCategory, 
-    handleArrayFieldAdd, handleArrayFieldRemove, handleArrayFieldChange  }) {
+export default function UpdateJobForm ({ job, onClose, fetchJobs, jobCategory  }) {
 
-    const [formData, setFormData] = useState({});
-    useEffect(() => {
-        setFormData({
-            title: job.title,
-            description: job.description,
-            category: job.category,
-            questions: job.questions || [],
-            emailForNotifications: job.emailForNotifications,
+    const [formData, setFormData] = useState({
+        title: job.title,
+        description: job.description,
+        category: job.category,
+        questions: job.questions || [],
+        emailForNotifications: job.emailForNotifications,
+    });
+
+    const handleArrayFieldAdd = (field) => {
+        setFormData(prev => ({
+            ...prev,
+            [field]: [...prev[field], '']
+        }));
+    };
+
+    const handleArrayFieldRemove = (field, index) => {
+        setFormData(prev => ({
+            ...prev,
+            [field]: prev[field].filter((_, i) => i !== index)
+        }));
+    };
+
+    const handleArrayFieldChange = (field, index, value) => {
+        setFormData(prev => {
+            const newArray = [...prev[field]];
+            newArray[index] = value;
+            return {
+                ...prev,
+                [field]: newArray
+            };
         });
-    }, [job]);
+    };
     
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -28,7 +49,7 @@ export default function UpdateJobForm ({ job, onClose, fetchJobs, jobCategory,
             const data = await response.json();
             if (data.success) {
                 toast.success('Job post updated successfully!');
-                fetchJobs();
+                await fetchJobs();
                 onClose();
             } else {
                 console.error(data.error || 'Failed to update job post');

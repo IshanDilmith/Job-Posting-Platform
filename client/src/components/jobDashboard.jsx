@@ -8,7 +8,7 @@ import UpdateJobForm from './UpdateJobForm';
 
 export default function jobDashboard({ jobPosts, isLoading, fetchJobs }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+    const [editingJobId, setEditingJobId] = useState(null);
 
     const jobCategory = ['Full Stack', 'Front End', 'Back End', 'Data Science', 'Machine Learning', 'DevOps'];
 
@@ -168,22 +168,18 @@ export default function jobDashboard({ jobPosts, isLoading, fetchJobs }) {
                                         <div className="flex items-center justify-end space-x-3">
                                             <button
                                                 onClick={() => {
-                                                    setIsUpdateModalOpen(true);
+                                                    setEditingJobId(job._id);
                                                 }}
                                                 className="text-indigo-600 hover:text-indigo-900 inline-flex items-center"
                                             >
                                                 <PencilIcon className="h-5 w-5" />
                                             </button>
-                                            {isUpdateModalOpen && (
+                                            { editingJobId === job._id && (
                                                 <UpdateJobForm
                                                     job={job}
-                                                    onClose={() => setIsUpdateModalOpen(false)}
+                                                    onClose={() => setEditingJobId(null)}
                                                     fetchJobs={fetchJobs}
                                                     jobCategory={jobCategory}
-                                                    handleArrayFieldAdd={handleArrayFieldAdd}
-                                                    handleArrayFieldRemove={handleArrayFieldRemove}
-                                                    handleArrayFieldChange={handleArrayFieldChange}
-                                                    setIsUpdateModalOpen={setIsUpdateModalOpen}
                                                 />
                                             )}
 

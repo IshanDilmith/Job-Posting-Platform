@@ -1,15 +1,11 @@
-import NavBar from "@/components/NavBar";
+import Tiptap from "@/components/Tiptap";
 
-
-const Home = () => {
-  return (
-    <div>
-      <NavBar />
-    <div>
-      <h1>Welcome to the Home Page</h1>
-      <p>This is a simple home page.</p>
-    </div>
-    </div>
-  );
+export default function Home() {
+    return (
+        <main className="flex min-h-screen flex-col items-center justify-between p-24">
+            <h1 className="text-4xl font-bold">Welcome to the Job Posting App</h1>
+            <Tiptap />
+            <p className="mt-4 text-lg">This is a simple application to post and manage job listings.</p>
+        </main>
+    );
 }
-export default Home;
