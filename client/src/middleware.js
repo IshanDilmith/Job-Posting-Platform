@@ -10,7 +10,7 @@ export default withAuth(
 
         // Redirect non-admin users trying to access admin routes
         if (isAdminRoute && !isAdmin) {
-            return NextResponse.redirect(new URL('/login', request.url));
+            return NextResponse.redirect(new URL('/admin/login', request.url));
         }
 
         return NextResponse.next();
@@ -24,7 +24,5 @@ export default withAuth(
 
 // Specify which routes to protect
 export const config = {
-    matcher: [
-        '/admin/:path*',  // Protect all admin routes
-    ]
+    matcher: ['/admin((?!/login).*)'],
 };

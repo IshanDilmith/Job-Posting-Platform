@@ -186,15 +186,8 @@ const Register = ({ onClose }) => {
                         hover:bg-[#1E40AF] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2563EB] 
                         transform transition-all duration-200 hover:scale-[1.02]"
                     >
-                        Sign up
+                        Register
                     </button>
-
-                    <p className="text-center text-sm text-[#6B7280]">
-                        Already have an account?{' '}
-                        <a href="/login" className="font-medium text-[#2563EB] hover:text-[#1E40AF] transition-colors duration-200">
-                            Sign in
-                        </a>
-                    </p>
                 </div>
             </form>
         </div>

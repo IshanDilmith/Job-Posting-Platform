@@ -52,6 +52,11 @@ const Login = () => {
                     </div>
 
                     <form className="space-y-6" onSubmit={handleSubmit}>
+                        {error && (
+                            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                                <span className="block sm:inline">{error}</span>
+                            </div>
+                        )}
                         <div className="space-y-4">
                             <div className="space-y-2">
                                 <label htmlFor="email" className="block text-sm font-medium text-[#1F2937]">

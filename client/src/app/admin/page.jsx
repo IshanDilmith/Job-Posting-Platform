@@ -19,7 +19,7 @@ export default function AdminDashboard() {
 
     const handleLogOut = async () => {
         await signOut({
-            callbackUrl: '/login',
+            callbackUrl: '/admin/login',
         });
     };
 
