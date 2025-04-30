@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react';
 import { PencilIcon, TrashIcon, PlusIcon } from '@heroicons/react/24/outline';
 import toast, { Toaster } from 'react-hot-toast';
 import Spinner from './Spinner';
+import UpdateJobForm from './UpdateJobForm';
 
-export default function jobDashboard({jobPosts, isLoading}) {
+export default function jobDashboard({ jobPosts, isLoading, fetchJobs }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingJob, setEditingJob] = useState(null);
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
     const jobCategory = ['Full Stack', 'Front End', 'Back End', 'Data Science', 'Machine Learning', 'DevOps'];
 
@@ -147,25 +148,52 @@ export default function jobDashboard({jobPosts, isLoading}) {
                                     <td className="px-6 py-4">
                                         <div className="text-sm text-gray-500">{job.category}</div>
                                     </td>
-                                    <td className="px-6 py-4">
-                                        <div className="text-sm text-gray-500">{job.questions.join(', ')}</div>
-                                    </td>
+                                    {job.questions.length === 0 ? (
+                                        <td className="px-6 py-4 text-sm text-gray-500">No questions added</td>
+                                    ) : (
+                                        <td className="px-6 py-4">
+                                            <div className="text-sm text-gray-500">
+                                                {job.questions.map((question, index) => (
+                                                    <div key={index} className="mb-1">
+                                                        {index + 1}. {question}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </td>
+                                    )}
                                     <td className="px-6 py-4">
                                         <div className="text-sm text-gray-500">{job.emailForNotifications}</div>
                                     </td>
-                                    <td className="px-6 py-4 text-right space-x-3">
-                                        <button
-                                            //onClick={() => { }}
-                                            className="text-indigo-600 hover:text-indigo-900"
-                                        >
-                                            <PencilIcon className="h-5 w-5 inline" />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(job._id)}
-                                            className="text-red-600 hover:text-red-900"
-                                        >
-                                            <TrashIcon className="h-5 w-5 inline" />
-                                        </button>
+                                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                                        <div className="flex items-center justify-end space-x-3">
+                                            <button
+                                                onClick={() => {
+                                                    setIsUpdateModalOpen(true);
+                                                }}
+                                                className="text-indigo-600 hover:text-indigo-900 inline-flex items-center"
+                                            >
+                                                <PencilIcon className="h-5 w-5" />
+                                            </button>
+                                            {isUpdateModalOpen && (
+                                                <UpdateJobForm
+                                                    job={job}
+                                                    onClose={() => setIsUpdateModalOpen(false)}
+                                                    fetchJobs={fetchJobs}
+                                                    jobCategory={jobCategory}
+                                                    handleArrayFieldAdd={handleArrayFieldAdd}
+                                                    handleArrayFieldRemove={handleArrayFieldRemove}
+                                                    handleArrayFieldChange={handleArrayFieldChange}
+                                                    setIsUpdateModalOpen={setIsUpdateModalOpen}
+                                                />
+                                            )}
+
+                                            <button
+                                                onClick={() => handleDelete(job._id)}
+                                                className="text-red-600 hover:text-red-900 inline-flex items-center"
+                                            >
+                                                <TrashIcon className="h-5 w-5" />
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
@@ -181,7 +209,6 @@ export default function jobDashboard({jobPosts, isLoading}) {
                         className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 transition-opacity"
                         onClick={() => {
                             setIsModalOpen(false);
-                            setEditingJob(null);
                             resetForm();
                         }}
                     />
@@ -193,10 +220,10 @@ export default function jobDashboard({jobPosts, isLoading}) {
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">
-                                    {editingJob ? 'Edit Job' : 'Add New Job'}
+                                    Add New Job
                                 </h3>
 
-                                {/*Form Fields*/}
+                                {/*Add Job Form*/}
                                 <form onSubmit={handleSubmit} className="space-y-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700">Job Title</label>
@@ -204,7 +231,7 @@ export default function jobDashboard({jobPosts, isLoading}) {
                                             type="text"
                                             value={formData.title}
                                             onChange={(e) => setFormData({...formData, title: e.target.value})}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm 
+                                            className="mt-1 h-10 block w-full rounded-md bg-gray-100 border-gray-300 shadow-sm 
                                             focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                             required
                                         />
@@ -216,7 +243,7 @@ export default function jobDashboard({jobPosts, isLoading}) {
                                             value={formData.description}
                                             onChange={(e) => setFormData({...formData, description: e.target.value})}
                                             rows={4}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm 
+                                            className="mt-1 bg-gray-100 block w-full rounded-md border-gray-300 shadow-sm 
                                             focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                             required
                                         />
@@ -228,7 +255,7 @@ export default function jobDashboard({jobPosts, isLoading}) {
                                             <select
                                                 value={formData.category}
                                                 onChange={(e) => setFormData({...formData, category: e.target.value})}
-                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm 
+                                                className="mt-1  bg-gray-100 h-10 block w-full rounded-md border-gray-300 shadow-sm 
                                                 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                             >
                                                 {jobCategory.map(category => (
@@ -249,7 +276,7 @@ export default function jobDashboard({jobPosts, isLoading}) {
                                                     type="text"
                                                     value={question}
                                                     onChange={(e) => handleArrayFieldChange('questions', index, e.target.value)}
-                                                    className="block w-full rounded-md border-gray-300 shadow-sm 
+                                                    className="block  bg-gray-100 h-10 w-full rounded-md border-gray-300 shadow-sm 
                                                     focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                 />
                                                 <button
@@ -278,7 +305,7 @@ export default function jobDashboard({jobPosts, isLoading}) {
                                             type="email"
                                             value={formData.emailForNotifications}
                                             onChange={(e) => setFormData({...formData, emailForNotifications: e.target.value})}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm 
+                                            className="mt-1  bg-gray-100 h-10 block w-full rounded-md border-gray-300 shadow-sm 
                                             focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                             required
                                         />
@@ -291,7 +318,6 @@ export default function jobDashboard({jobPosts, isLoading}) {
                                             type="button"
                                             onClick={() => {
                                                 setIsModalOpen(false);
-                                                setEditingJob(null);
                                                 resetForm();
                                             }}
                                             className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-500"

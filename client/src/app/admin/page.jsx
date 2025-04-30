@@ -52,28 +52,30 @@ export default function AdminDashboard() {
         fetchData();
     }, [activeTab]);
 
-    useEffect(() => {
-        const fetchJobs = async () => {
-            try {
-                const response = await fetch('/api/job-posting', {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-    
-                const res = await response.json();
-    
-                if (res.success) {
-                    setJobPosts(res.data);
-                    setTotalJobs(res.data.length);
-                }
-            } catch (error) {
-                toast.error('Failed to fetch jobs');
-            } finally {
-                setIsLoading(false);
+    const fetchJobs = async () => {
+        try {
+            const response = await fetch('/api/job-posting', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            const res = await response.json();
+
+            if (res.success) {
+                setJobPosts(res.data);
+                setTotalJobs(res.data.length);
             }
-        };
+        } catch (error) {
+            toast.error('Failed to fetch jobs');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
 
         fetchJobs();
+        
     }, [activeTab]);
 
     const tabs = [
@@ -188,7 +190,8 @@ export default function AdminDashboard() {
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                         <JobDashboard 
                             jobPosts={jobPosts}
-                            isLoading={isLoading}/>
+                            isLoading={isLoading}
+                            fetchJobs={fetchJobs}/>
                     </div>
                 )}
             </div>

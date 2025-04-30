@@ -7,7 +7,6 @@ export default async function handler(req, res) {
     if (req.method === "POST") {
         try {
             const { title, description, category, questions, emailForNotifications } = req.body;
-            console.log("Received data:", req.body);
 
             if (!title || !description || !category || !emailForNotifications) {
                 return res.status(400).json({
