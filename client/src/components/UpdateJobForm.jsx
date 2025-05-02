@@ -118,7 +118,7 @@ export default function UpdateJobForm ({ job, onClose, fetchJobs, jobCategory  }
                                                 value={formData.category}
                                                 onChange={(e) => setFormData({...formData, category: e.target.value})}
                                                 className="px-4 py-3 mt-1  bg-gray-100 h-10 block w-full rounded-md border-gray-300 shadow-sm 
-                                                focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                    focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                             >
                                                 {jobCategory.map(category => (
                                                     <option key={category} value={category}>{category}</option>
@@ -139,7 +139,7 @@ export default function UpdateJobForm ({ job, onClose, fetchJobs, jobCategory  }
                                                     value={question}
                                                     onChange={(e) => handleArrayFieldChange('questions', index, e.target.value)}
                                                     className="px-4 py-3 block  bg-gray-100 h-10 w-full rounded-md border-gray-300 shadow-sm 
-                                                    focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                 />
                                                 <button
                                                     type="button"

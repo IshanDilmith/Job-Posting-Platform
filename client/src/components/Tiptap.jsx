@@ -62,6 +62,7 @@ const Tiptap = ({ content, onChange }) => {
         <div className="w-full max-w-4xl mx-auto">
             <div className="toolbar bg-white border border-gray-200 rounded-t-lg p-2 flex flex-wrap gap-2 shadow-sm">
                 <button
+                    type="button"
                     onClick={addBold}
                     className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors
                         ${editor?.isActive('bold') 
@@ -72,6 +73,7 @@ const Tiptap = ({ content, onChange }) => {
                 </button>
 
                 <button
+                    type="button"
                     onClick={addItalic}
                     className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors
                         ${editor?.isActive('italic')
@@ -82,6 +84,7 @@ const Tiptap = ({ content, onChange }) => {
                 </button>
 
                 <button
+                    type="button"
                     onClick={addUnderline}
                     className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors
                         ${editor?.isActive('underline')
@@ -93,6 +96,7 @@ const Tiptap = ({ content, onChange }) => {
 
                 <div className="h-6 w-px bg-gray-200 mx-1" /> {/* Divider */}
                     <button
+                        type="button"
                         onClick={() => setAlignment('left')}
                         className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors
                             ${editor?.isActive({ textAlign: 'left' })
@@ -103,6 +107,7 @@ const Tiptap = ({ content, onChange }) => {
                     </button>
 
                     <button
+                        type="button"
                         onClick={() => setAlignment('center')}
                         className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors
                             ${editor?.isActive({ textAlign: 'center' })
@@ -113,6 +118,7 @@ const Tiptap = ({ content, onChange }) => {
                     </button>
 
                     <button
+                        type="button"
                         onClick={() => setAlignment('right')}
                         className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors
                             ${editor?.isActive({ textAlign: 'right' })
@@ -125,6 +131,7 @@ const Tiptap = ({ content, onChange }) => {
                     <div className="h-6 w-px bg-gray-200 mx-1" /> {/* Divider */}
 
                     <button
+                        type="button"
                         onClick={() => setHeading(1)}
                         className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors
                             ${editor?.isActive('heading', { level: 1 })
@@ -135,6 +142,7 @@ const Tiptap = ({ content, onChange }) => {
                     </button>
 
                     <button
+                        type="button"
                         onClick={() => setHeading(2)}
                         className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors
                             ${editor?.isActive('heading', { level: 2 })
@@ -144,6 +152,7 @@ const Tiptap = ({ content, onChange }) => {
                         H2
                     </button>
                     <button
+                        type="button"
                         onClick={() => setHeading(3)}
                         className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors
                             ${editor?.isActive('heading', { level: 3 })
@@ -155,6 +164,7 @@ const Tiptap = ({ content, onChange }) => {
                     <div className="h-6 w-px bg-gray-200 mx-1" /> {/* Divider */}
 
                     <button
+                        type="button"
                         onClick={addLink}
                         className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors
                             ${editor?.isActive('link')
