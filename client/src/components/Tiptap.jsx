@@ -9,7 +9,7 @@ import Bold from '@tiptap/extension-bold'
 import Italic from '@tiptap/extension-italic'
 import Underline from '@tiptap/extension-underline'
 
-const Tiptap = ( content, onChange ) => {
+const Tiptap = ({ content, onChange }) => {
     const editor = useEditor({
         extensions: [
             StarterKit,
@@ -23,7 +23,7 @@ const Tiptap = ( content, onChange ) => {
         content: content,
         editable: true,
         onUpdate: ({ editor }) => {
-        onChange(editor.getHTML())
+            onChange(editor.getHTML())
         },
     })
 

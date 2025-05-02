@@ -1,7 +1,6 @@
 'use client';
 import React, { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
 
 const Register = ({ onClose }) => {
 
@@ -12,7 +11,6 @@ const Register = ({ onClose }) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState(null);
-    const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
