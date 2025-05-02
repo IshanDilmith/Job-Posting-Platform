@@ -17,7 +17,7 @@ export default function jobDashboard({ jobPosts, isLoading, fetchJobs }) {
         title: '',
         description: '',
         category: jobCategory[0],
-        questions: [''],
+        questions: [],
         emailForNotifications: ''
     });
 
@@ -44,7 +44,7 @@ export default function jobDashboard({ jobPosts, isLoading, fetchJobs }) {
             title: '',
             description: '',
             category: jobCategory[0],
-            questions: [''],
+            questions: [],
             emailForNotifications: ''
         });
     };
