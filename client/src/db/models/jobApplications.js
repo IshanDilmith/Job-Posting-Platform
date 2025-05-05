@@ -7,8 +7,7 @@ const jobApplicationSchema = new mongoose.Schema({
         required: true,
     },
     fullName: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "JobPost",
+        type: String,
         required: true,
     },
     email: {
@@ -19,13 +18,11 @@ const jobApplicationSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    cv: {
-        type: String,
-        required: true,
+    questions: {
+        type: [String]
     },
     answers: {
-        type: [String],
-        required: true,
+        type: [String]
     },  
 });
 

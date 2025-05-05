@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn, getSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import toast, { Toaster } from 'react-hot-toast';
@@ -10,6 +10,19 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const router = useRouter();
+
+    useEffect(() => {
+        const checkSession = async () => {
+            const session = await getSession();
+            if (session?.user?.role === 'admin') {
+                router.push('/admin/');
+            } else if (session) {
+                router.push('/');
+            }
+        };
+    
+        checkSession();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

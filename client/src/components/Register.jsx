@@ -38,7 +38,7 @@ const Register = ({ onClose }) => {
         const data = await res.json();
 
         if (res.status === 201) {
-            toast.success('Registration successful! Redirecting to login...');
+            toast.success('Registration successful!');
             onClose();
         } else {
             toast.error(data.error || 'Something went wrong!');

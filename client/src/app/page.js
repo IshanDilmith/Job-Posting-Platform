@@ -1,13 +1,11 @@
 "use client"
 import { useState, useEffect } from 'react'
 import Spinner from '@/components/Spinner'
-import JobApply from '@/components/jobApplyForm'
+import Link from 'next/link'
 
 export default function Home() {
     const [jobs, setJobs] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [selectedJobId, setSelectedJobId] = useState(null);
-
 
     const fetchJobs = async () => {
         try {
@@ -52,40 +50,25 @@ export default function Home() {
                             key={job._id} 
                             className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
                         >
-                            <div className="p-6">
-                                <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                                    {job.title}
-                                </h2>
-                                <div className="text-sm text-gray-600 mb-4">
-                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                        {job.category}
-                                    </span>
+                            <Link href={`/job/${job._id}`}>
+                                <div className="p-6">
+                                    <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                                        {job.title}
+                                    </h2>
+                                    <div className="text-sm text-gray-600 mb-4">
+                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            {job.category}
+                                        </span>
+                                    </div>
+                                    <div 
+                                        className="text-sm text-gray-500 mb-4 line-clamp-3"
+                                        dangerouslySetInnerHTML={{ __html: job.description }}
+                                    />
                                 </div>
-                                <div 
-                                    className="text-sm text-gray-500 mb-4 line-clamp-3"
-                                    dangerouslySetInnerHTML={{ __html: job.description }}
-                                />
-                                <div className="mt-4">
-                                    <button
-                                        onClick={() => setSelectedJobId(job._id)}
-                                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md 
-                                        text-white bg-[#2563EB] hover:bg-[#1E40AF] focus:outline-none focus:ring-2 
-                                        focus:ring-offset-2 focus:ring-[#2563EB] transition-colors duration-200"
-                                    >
-                                        Apply Now
-                                    </button>
-                                </div>
-                            </div>
+                            </Link>
                         </div>
                     ))}
                 </div>
-
-                {selectedJobId && (
-                    <JobApply
-                        job={jobs.find(job => job._id === selectedJobId)}
-                        onClose={() => setSelectedJobId(null)}
-                    />
-                )}
 
                 {jobs.length === 0 && (
                     <div className="text-center py-12">
