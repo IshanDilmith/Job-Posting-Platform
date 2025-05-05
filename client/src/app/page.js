@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react'
 import Spinner from '@/components/Spinner'
 import Link from 'next/link'
+import NavBar from '@/components/NavBar'
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Home() {
     const [jobs, setJobs] = useState([]);
@@ -40,41 +42,45 @@ export default function Home() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-8">Available Job Positions</h1>
-                
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {jobs.map((job) => (
-                        <div 
-                            key={job._id} 
-                            className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
-                        >
-                            <Link href={`/job/${job._id}`}>
-                                <div className="p-6">
-                                    <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                                        {job.title}
-                                    </h2>
-                                    <div className="text-sm text-gray-600 mb-4">
-                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                            {job.category}
-                                        </span>
+        <div>
+            <NavBar />
+            <Toaster />
+            <div className="min-h-screen bg-gray-100 py-8">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h1 className="text-3xl font-bold text-gray-900 mb-8">Available Job Positions</h1>
+                    
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                        {jobs.map((job) => (
+                            <div 
+                                key={job._id} 
+                                className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
+                            >
+                                <Link href={`/job/${job._id}`}>
+                                    <div className="p-6">
+                                        <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                                            {job.title}
+                                        </h2>
+                                        <div className="text-sm text-gray-600 mb-4">
+                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                {job.category}
+                                            </span>
+                                        </div>
+                                        <div 
+                                            className="text-sm text-gray-500 mb-4 line-clamp-3"
+                                            dangerouslySetInnerHTML={{ __html: job.description }}
+                                        />
                                     </div>
-                                    <div 
-                                        className="text-sm text-gray-500 mb-4 line-clamp-3"
-                                        dangerouslySetInnerHTML={{ __html: job.description }}
-                                    />
-                                </div>
-                            </Link>
-                        </div>
-                    ))}
-                </div>
-
-                {jobs.length === 0 && (
-                    <div className="text-center py-12">
-                        <p className="text-gray-500 text-lg">No job positions available at the moment.</p>
+                                </Link>
+                            </div>
+                        ))}
                     </div>
-                )}
+
+                    {jobs.length === 0 && (
+                        <div className="text-center py-12">
+                            <p className="text-gray-500 text-lg">No job positions available at the moment.</p>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     )

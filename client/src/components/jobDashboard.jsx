@@ -105,6 +105,10 @@ export default function jobDashboard({ jobPosts, isLoading, fetchJobs }) {
         );
     }
 
+    const viewApplicants = (jobId) => {
+        window.location.href = `/admin/applicants/${jobId}`;
+    }
+
     return (
         <div className="min-h-screen bg-white py-8">
             <Toaster />
@@ -128,12 +132,12 @@ export default function jobDashboard({ jobPosts, isLoading, fetchJobs }) {
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Questions</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">E-mail</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Title</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Description</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Category</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Questions</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">E-mail</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
@@ -169,6 +173,15 @@ export default function jobDashboard({ jobPosts, isLoading, fetchJobs }) {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right">
                                         <div className="flex items-center justify-end space-x-3">
+                                            <button
+                                                onClick={() => viewApplicants(job._id)}
+                                                className="text-green-600 hover:text-green-900 inline-flex items-center"
+                                                title="View Applicants"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                                                </svg>
+                                            </button>
                                             <button
                                                 onClick={() => {
                                                     setEditingJobId(job._id);

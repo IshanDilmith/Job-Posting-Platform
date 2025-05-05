@@ -6,6 +6,7 @@ import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { useParams } from 'next/navigation'
 import JobApply from '@/components/jobApplyForm'
 import toast, { Toaster } from 'react-hot-toast';
+import NavBar from '@/components/NavBar'
 
 export default function JobDetails() {
     const router = useRouter();
@@ -71,14 +72,18 @@ export default function JobDetails() {
     return (
         <div>
             <Toaster />
-            <div className="min-h-screen bg-gray-50 py-8">
+            <NavBar />
+            <div className="min-h-screen bg-gray-100 py-8">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Back Button */}
                     <button
                         onClick={() => router.back()}
-                        className="mb-6 inline-flex items-center text-sm text-gray-600 hover:text-gray-900"
+                        className="group mb-8 inline-flex items-center px-4 py-2 text-sm font-medium 
+                            text-gray-700 hover:text-blue-600 bg-white rounded-lg shadow-sm 
+                            hover:shadow transition-all duration-200 ease-in-out"
                     >
-                        <ArrowLeftIcon className="h-4 w-4 mr-1" />
+                        <ArrowLeftIcon className="h-5 w-5 mr-2 transform group-hover:-translate-x-1 
+                            transition-transform duration-200 ease-in-out" />
                         Back to Jobs
                     </button>
 
