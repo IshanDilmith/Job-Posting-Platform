@@ -22,20 +22,11 @@ export default async function handler(req, res) {
                 to: data.emailTo,
                 subject: `New Job Application for : ${data.jobTitle}`,
                 html: `
-                    <h2>New Job Application</h2>
+                    <h2>New Job Application For ${data.jobTitle}</h2>
                     <p><strong>Position:</strong> ${data.jobTitle}</p>
                     <p><strong>Applicant Name:</strong> ${data.fullName}</p>
                     <p><strong>Email:</strong> ${data.email}</p>
                     <p><strong>Phone:</strong> ${data.phoneNumber}</p>
-                    
-                    ${data.answers.length > 0 ? `
-                        <h3>Screening Questions:</h3>
-                        <ul>
-                            ${data.answers.map((answer, index) => `
-                                <li><strong>Q${index + 1}:</strong> ${answer}</li>
-                            `).join('')}
-                        </ul>
-                    ` : ''}
                 `,
                 attachments: [{
                     filename: data.cv.filename,
