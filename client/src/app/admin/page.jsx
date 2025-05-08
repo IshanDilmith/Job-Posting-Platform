@@ -14,6 +14,7 @@ export default function AdminDashboard() {
     const [admins, setAdmins] = useState([]);
     const [totalAdmins, setTotalAdmins] = useState(0);
     const [totalJobs, setTotalJobs] = useState(0);
+    const [totalApplicants, setTotalApplicants] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [jobPosts, setJobPosts] = useState([]);
 
@@ -35,8 +36,18 @@ export default function AdminDashboard() {
                         credentials: 'include'
                     });
                     const data = await response.json();
+
+                    const applicants = await fetch('/api/applyJob', {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: 'include'
+                    });
+                    const applicantsData = await applicants.json();
                     
-                    if (data.success) {
+                    if (data.success && applicantsData.success) {
+                        setTotalApplicants(applicantsData.data.length);
                         setAdmins(data.data);
                         setTotalAdmins(data.data.length);
                     } else {
@@ -89,7 +100,7 @@ export default function AdminDashboard() {
             <Toaster />
             
             {/* Header */}
-            <div className="bg-white shadow">
+            <div className="bg-white shadow sticky top-0 z-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                     <div className="flex justify-between items-center">
                         <h1 className="text-2xl font-bold text-[#1F2937]">Admin Dashboard</h1>
@@ -144,6 +155,7 @@ export default function AdminDashboard() {
                 {activeTab === 'dashboard' && (
                     <div>
                         <Dashboard
+                            totalApplicants={totalApplicants}
                             totalAdmins={totalAdmins}
                             totalJobs={totalJobs}
                             isLoading={isLoading}/>

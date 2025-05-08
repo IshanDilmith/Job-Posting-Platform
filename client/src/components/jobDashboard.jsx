@@ -150,7 +150,7 @@ export default function jobDashboard({ jobPosts, isLoading, fetchJobs }) {
                                     </td>
                                     <td className="px-6 py-4">
                                         <div 
-                                            className="text-sm text-gray-900"
+                                            className="text-sm text-gray-900 line-clamp-3"
                                             dangerouslySetInnerHTML={{ __html: job.description }}
                                         />
                                     </td>

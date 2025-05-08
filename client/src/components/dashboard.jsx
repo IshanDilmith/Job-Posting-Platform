@@ -1,7 +1,7 @@
 'use client';
 import Spinner from "./Spinner";
 
-export default function Dashboard({ totalAdmins, totalJobs, isLoading }) {
+export default function Dashboard({ totalAdmins, totalJobs, isLoading, totalApplicants }) {
     if(isLoading) {
         return (
             <div>
@@ -31,6 +31,10 @@ export default function Dashboard({ totalAdmins, totalJobs, isLoading }) {
                         <div className="bg-white rounded-lg shadow p-6">
                             <h3 className="text-lg font-medium text-[#1F2937]">Total Jobs</h3>
                             <p className="mt-2 text-3xl font-bold text-[#2563EB]">{totalJobs}</p>
+                        </div>
+                        <div className="bg-white rounded-lg shadow p-6">
+                            <h3 className="text-lg font-medium text-[#1F2937]">Total Applicants</h3>
+                            <p className="mt-2 text-3xl font-bold text-[#2563EB]">{totalApplicants}</p>
                         </div>
                     </div>
                 </div>

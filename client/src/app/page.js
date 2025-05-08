@@ -9,12 +9,14 @@ import Footer from '@/components/footer'
 import AddJobForm from '@/components/AddJobForm'
 import { Filter } from 'lucide-react'
 import { getSession } from 'next-auth/react'
+import JobApply from '@/components/jobApplyForm'
 
 export default function Home() {
     const [jobs, setJobs] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [session, setSession] = useState(null);
+    const [selectedJobId, setSelectedJobId] = useState(null);
 
     const jobCategory = ['Full Stack', 'Front End', 'Back End', 'Data Science', 'Machine Learning', 'DevOps'];
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -67,7 +69,7 @@ export default function Home() {
     }
 
     return (
-        <div className="bg-gray-100 min-h-screen">
+        <div className="bg-gray-100 min-h-screen flex flex-col">
             <NavBar />
             <Toaster/>
 
@@ -117,116 +119,148 @@ export default function Home() {
                 </div>
             </div>
 
-            <div className={`grid grid-cols-1 ${session ? 'lg:grid-cols-3' : 'lg:grid-cols-1'} lg:mx-15 mt-10`}>
-
-                {session && (
-                    <div className="lg:col-span-1 bg-gray-100 mr-2 mb-10">
-                        <AddJobForm
-                            fetchJobs={fetchJobs} />
-                    </div>
-                )}
-                
-
-                <div className={`${session ? 'lg:col-span-2' : 'lg:col-span-1'} min-h-screen`}>
-                    
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6">
-                        <div className="grid grid-cols-2 ">
-                            <div>
-                                <h1 className="text-xl font-bold text-gray-700 mb-5">Latest Job Postings</h1>
-                            </div>
-
-                            <div className="flex justify-end items-center">
-                                <div className="relative">
-                                    <div className="absolute inset-y-0 left-2 flex items-center pointer-events-none">
-                                        <Filter className="h-5 w-5 text-gray-400" />
-                                    </div>
-                                    <select
-                                        value={selectedCategory}
-                                        onChange={(e) => setSelectedCategory(e.target.value)}
-                                        className="h-10 pl-9 pr-3 rounded-lg text-gray-600 text-sm font-medium
-                                        appearance-none"
-                                    >
-                                        <option value="">Filter</option>
-                                        {jobCategory.map((category) => (
-                                            <option key={category} value={category}>
-                                                {category}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+            <div className="flex-1">
+                <div className={`grid grid-cols-1 ${session ? 'lg:grid-cols-3' : 'lg:grid-cols-1'} gap-6 lg:mx-15 mt-10`}>
+                    {session && (
+                        <div className="lg:col-span-1">
+                            <div className="lg:sticky lg:top-20">
+                                <AddJobForm fetchJobs={fetchJobs} />
                             </div>
                         </div>
+                    )}
+                    
 
-                        <div className="grid grid-cols-1 gap-6">
-                            {filteredJobs.map((job) => (
-                                <div 
-                                    key={job._id} 
-                                    className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
-                                >
-                                    <Link href={`/job/${job._id}`}>
-                                        <div className="p-6">
-                                            <div className="flex justify-between items-start mb-4">
-                                                <div>
-                                                    <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                                                        {job.title}
-                                                    </h2>
-                                                    <div className="space-x-2 mb-4">
-                                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                            {job.category}
-                                                        </span>
+                    <div className={`${session ? 'lg:col-span-2' : 'lg:col-span-1'}`}>
+                        
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                            <div className="grid grid-cols-2 ">
+                                <div>
+                                    <h1 className="text-xl font-bold text-gray-700 mb-5">Latest Job Postings</h1>
+                                </div>
+
+                                <div className="flex justify-end items-center">
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-2 flex items-center pointer-events-none">
+                                            <Filter className="h-5 w-5 text-gray-400" />
+                                        </div>
+                                        <select
+                                            value={selectedCategory}
+                                            onChange={(e) => setSelectedCategory(e.target.value)}
+                                            className="h-10 pl-9 pr-3 rounded-lg text-gray-600 text-sm font-medium
+                                            appearance-none"
+                                        >
+                                            <option value="">Filter</option>
+                                            {jobCategory.map((category) => (
+                                                <option key={category} value={category}>
+                                                    {category}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-6">
+                                {filteredJobs.map((job) => (
+                                    <div 
+                                        key={job._id} 
+                                        className={`bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200
+                                            ${session ? 'max-h-[calc(100vh-1rem)] overflow-y-auto' : 'overflow-hidden'}`}
+                                    >
+                                        
+                                        <Link href={`/job/${job._id}`}>
+                                            <div className="p-6">
+                                                <div className="flex justify-between gap-4">
+                                                    <div className="flex-1 min-w-0">
+                                                        <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                                                            {job.title}
+                                                        </h2>
+                                                        <div className="space-x-2 mb-4">
+                                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                                {job.category}
+                                                            </span>
+                                                        </div>
+                                                        <div 
+                                                            className="text-sm text-gray-900 line-clamp-3 mb-5"
+                                                            dangerouslySetInnerHTML={{ __html: job.description }}
+                                                        />
+                                                        <div className="flex items-center space-x-4 text-sm text-gray-500">
+                                                            <span className="inline-flex items-center gap-1.5">
+                                                                <CalendarIcon className="h-4 w-4" />
+                                                                <p>Posted On:</p>
+                                                                
+                                                                {new Date(job.createdAt).toLocaleDateString()}
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                    <div className="flex items-center space-x-4 text-sm text-gray-500">
-                                                        <span className="inline-flex items-center gap-1.5">
-                                                            <CalendarIcon className="h-4 w-4" />
-                                                            <p>Posted On:</p>
-                                                            
-                                                            {new Date(job.createdAt).toLocaleDateString()}
-                                                        </span>
+                                                    <div className="flex items-start space-x-2 flex-shrink-0">
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                setSelectedJobId(job._id)
+                                                            }}
+                                                            className="px-4 py-2 text-sm font-medium text-white bg-[#2563EB] rounded-lg 
+                                                                hover:bg-[#1E40AF] transition-colors duration-200 
+                                                                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2563EB]"
+                                                        >
+                                                            Apply Now
+                                                        </button>
+                                                        
+                                                        <button 
+                                                            className="p-2 hover:bg-gray-50 rounded-full transition-colors duration-200"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                e.stopPropagation();
+                                                            }}  
+                                                        >
+                                                            <BookmarkIcon className="h-5 w-5 text-gray-400 hover:text-blue-600" />
+                                                        </button>
                                                     </div>
                                                 </div>
-                                                <button 
-                                                    className="p-2 hover:bg-gray-50 rounded-full transition-colors duration-200"
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        e.stopPropagation();
-                                                    }}  
-                                                >
-                                                    
-                                                    <BookmarkIcon className="h-5 w-5 text-gray-400 hover:text-blue-600" />
-                                                </button>
+                                                
                                             </div>
-                                            
-                                        </div>
-                                    </Link>
-                                </div>
-                            ))}
-                        </div>
+                                        </Link>
 
-                        {filteredJobs.length === 0 && (
-                            <div className="text-center py-12">
-                                <p className="text-gray-500 text-lg">
-                                    {jobs.length === 0 
-                                        ? "No job positions available at the moment."
-                                        : "No jobs match your search criteria."}
-                                </p>
+                                        {selectedJobId === job._id && (
+                                            <JobApply
+                                                job={job}
+                                                onClose={() => setSelectedJobId(null)}
+                                            />
+                                        )}
+
+                                    </div>
+                                ))}
                             </div>
+
+                            {filteredJobs.length === 0 && (
+                                <div className="text-center py-12">
+                                    <p className="text-gray-500 text-lg">
+                                        {jobs.length === 0 
+                                            ? "No job positions available at the moment."
+                                            : "No jobs match your search criteria."}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                        
+                        {filteredJobs.length > 0 && (
+                            <button
+                                className="mt-6 mb-10 px-6 py-2 text-sm font-medium text-blue-600 bg-white rounded-lg 
+                                    hover:bg-blue-100 flex items-center gap-2
+                                    justify-center mx-auto border border-gray-300 h-10"
+                            >
+                                Load More Jobs
+                            </button>
                         )}
                     </div>
-                    
-                    {filteredJobs.length > 0 && (
-                        <button
-                            className="mt-6 mb-10 px-6 py-2 text-sm font-medium text-blue-600 bg-white rounded-lg 
-                                hover:bg-blue-100 flex items-center gap-2
-                                justify-center mx-auto border border-gray-300 h-10"
-                        >
-                            Load More Jobs
-                        </button>
-                    )}
+
                 </div>
-
             </div>
+            
 
-            <Footer />
+            <div className="mt-7">
+                <Footer />
+            </div>
         </div>
     )
 }
