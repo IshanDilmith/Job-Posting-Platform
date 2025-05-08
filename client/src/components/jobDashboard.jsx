@@ -131,88 +131,90 @@ export default function jobDashboard({ jobPosts, isLoading, fetchJobs }) {
 
                 {/* Jobs Table */}
                 <div className="bg-white shadow-sm rounded-lg overflow-hidden">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Title</th>
-                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Description</th>
-                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Category</th>
-                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Questions</th>
-                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">E-mail</th>
-                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-200">
-                            {jobPosts.map((job) => (
-                                <tr key={job._id} className="hover:bg-gray-50">
-                                    <td className="px-6 py-4">
-                                        <div className="text-sm font-medium text-gray-900">{job.title}</div>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <div 
-                                            className="text-sm text-gray-900 line-clamp-3"
-                                            dangerouslySetInnerHTML={{ __html: job.description }}
-                                        />
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <div className="text-sm text-gray-500">{job.category}</div>
-                                    </td>
-                                    {job.questions.length === 0 ? (
-                                        <td className="px-6 py-4 text-sm text-gray-500">No questions added</td>
-                                    ) : (
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Title</th>
+                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Description</th>
+                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Category</th>
+                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Questions</th>
+                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">E-mail</th>
+                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200">
+                                {jobPosts.map((job) => (
+                                    <tr key={job._id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4">
-                                            <div className="text-sm text-gray-500">
-                                                {job.questions.map((question, index) => (
-                                                    <div key={index} className="mb-1">
-                                                        {index + 1}. {question}
-                                                    </div>
-                                                ))}
+                                            <div className="text-sm font-medium text-gray-900">{job.title}</div>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div 
+                                                className="text-sm text-gray-900 line-clamp-3"
+                                                dangerouslySetInnerHTML={{ __html: job.description }}
+                                            />
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="text-sm text-gray-500">{job.category}</div>
+                                        </td>
+                                        {job.questions.length === 0 ? (
+                                            <td className="px-6 py-4 text-sm text-gray-500">No questions added</td>
+                                        ) : (
+                                            <td className="px-6 py-4">
+                                                <div className="text-sm text-gray-500">
+                                                    {job.questions.map((question, index) => (
+                                                        <div key={index} className="mb-1">
+                                                            {index + 1}. {question}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </td>
+                                        )}
+                                        <td className="px-6 py-4">
+                                            <div className="text-sm text-gray-500">{job.emailForNotifications}</div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-right">
+                                            <div className="flex items-center justify-end space-x-3">
+                                                <button
+                                                    onClick={() => viewApplicants(job._id)}
+                                                    className="text-green-600 hover:text-green-900 inline-flex items-center"
+                                                    title="View Applicants"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                                                    </svg>
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        setEditingJobId(job._id);
+                                                    }}
+                                                    className="text-indigo-600 hover:text-indigo-900 inline-flex items-center"
+                                                >
+                                                    <PencilIcon className="h-5 w-5" />
+                                                </button>
+                                                { editingJobId === job._id && (
+                                                    <UpdateJobForm
+                                                        job={job}
+                                                        onClose={() => setEditingJobId(null)}
+                                                        fetchJobs={fetchJobs}
+                                                        jobCategory={jobCategory}
+                                                    />
+                                                )}
+
+                                                <button
+                                                    onClick={() => handleDelete(job._id)}
+                                                    className="text-red-600 hover:text-red-900 inline-flex items-center"
+                                                >
+                                                    <TrashIcon className="h-5 w-5" />
+                                                </button>
                                             </div>
                                         </td>
-                                    )}
-                                    <td className="px-6 py-4">
-                                        <div className="text-sm text-gray-500">{job.emailForNotifications}</div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                                        <div className="flex items-center justify-end space-x-3">
-                                            <button
-                                                onClick={() => viewApplicants(job._id)}
-                                                className="text-green-600 hover:text-green-900 inline-flex items-center"
-                                                title="View Applicants"
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-                                                </svg>
-                                            </button>
-                                            <button
-                                                onClick={() => {
-                                                    setEditingJobId(job._id);
-                                                }}
-                                                className="text-indigo-600 hover:text-indigo-900 inline-flex items-center"
-                                            >
-                                                <PencilIcon className="h-5 w-5" />
-                                            </button>
-                                            { editingJobId === job._id && (
-                                                <UpdateJobForm
-                                                    job={job}
-                                                    onClose={() => setEditingJobId(null)}
-                                                    fetchJobs={fetchJobs}
-                                                    jobCategory={jobCategory}
-                                                />
-                                            )}
-
-                                            <button
-                                                onClick={() => handleDelete(job._id)}
-                                                className="text-red-600 hover:text-red-900 inline-flex items-center"
-                                            >
-                                                <TrashIcon className="h-5 w-5" />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
