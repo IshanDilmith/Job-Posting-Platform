@@ -6,6 +6,8 @@ import UserDashboard from '@/components/userDashboard';
 import JobDashboard from '@/components/jobDashboard';
 import { signOut } from 'next-auth/react';
 import Dashboard from '@/components/dashboard';
+import Link from 'next/link';
+import { HomeIcon } from '@heroicons/react/24/outline';
 
 export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState('dashboard');
@@ -92,6 +94,15 @@ export default function AdminDashboard() {
                     <div className="flex justify-between items-center">
                         <h1 className="text-2xl font-bold text-[#1F2937]">Admin Dashboard</h1>
                         <div className="flex space-x-4">
+                            <Link 
+                                href="/"
+                                className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium 
+                                    text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200 
+                                    transition-all duration-200 gap-2"
+                            >
+                                <HomeIcon className="h-5 w-5" />
+                                Home
+                            </Link>
                             <button
                                 onClick={handleLogOut}
                                 className="px-4 py-2 text-sm font-medium text-white bg-[#2563EB] rounded-lg 

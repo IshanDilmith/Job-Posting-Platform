@@ -31,6 +31,7 @@
     "joi": "^17.13.3",
     "joi-password-complexity": "^5.2.0",
     "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.507.0",
     "mongodb": "^6.16.0",
     "mongoose": "^8.14.0",
     "next": "15.3.1",

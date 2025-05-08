@@ -66,7 +66,7 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Categories Section */}
+                    {/* Employers Section */}
                     <div>
                         <h3 className="text-white text-lg font-semibold mb-5">For Employers</h3>
                         <ul className="space-y-2 text-sm">
@@ -123,7 +123,7 @@ const Footer = () => {
 
                 {/* Copyright Section */}
                 <div className="border-t border-gray-800 mt-8 pt-8 text-sm text-left">
-                    <p>&copy; {new Date().getFullYear()} JobPost. All rights reserved.</p>
+                    <p>&copy; 2025 JobPost. All rights reserved.</p>
                 </div>
             </div>
         </footer>

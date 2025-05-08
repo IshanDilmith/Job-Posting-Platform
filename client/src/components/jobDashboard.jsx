@@ -10,6 +10,7 @@ import Tiptap from './Tiptap';
 export default function jobDashboard({ jobPosts, isLoading, fetchJobs }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingJobId, setEditingJobId] = useState(null);
+    const [editorKey, setEditorKey] = useState(0);
 
     const jobCategory = ['Full Stack', 'Front End', 'Back End', 'Data Science', 'Machine Learning', 'DevOps'];
 
@@ -47,6 +48,7 @@ export default function jobDashboard({ jobPosts, isLoading, fetchJobs }) {
             questions: [],
             emailForNotifications: ''
         });
+        setEditorKey(prev => prev + 1);
     };
 
     // Add/remove dynamic fields (requirements, questions)
@@ -263,6 +265,7 @@ export default function jobDashboard({ jobPosts, isLoading, fetchJobs }) {
                                                         description: newContent
                                                     }))
                                                 }}
+                                                editorKey={editorKey}
                                             />
                                         </div>
 

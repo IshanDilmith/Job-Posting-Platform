@@ -9,7 +9,7 @@ import Bold from '@tiptap/extension-bold'
 import Italic from '@tiptap/extension-italic'
 import Underline from '@tiptap/extension-underline'
 
-const Tiptap = ({ content, onChange }) => {
+const Tiptap = ({ content, onChange, editorKey }) => {
     const editor = useEditor({
         extensions: [
             StarterKit,
@@ -20,12 +20,12 @@ const Tiptap = ({ content, onChange }) => {
             Italic,
             Underline,
         ],
-        content: content,
+        content: content || '',
         editable: true,
         onUpdate: ({ editor }) => {
             onChange(editor.getHTML())
         },
-    })
+    }, [editorKey])
 
     if(!editor) {
         return null;
@@ -60,7 +60,7 @@ const Tiptap = ({ content, onChange }) => {
 
     return (
         <div className="w-full max-w-4xl mx-auto">
-            <div className="toolbar bg-white border border-gray-200 rounded-t-lg p-2 flex flex-wrap gap-2 shadow-sm">
+            <div className="toolbar bg-white border border-gray-200 rounded-t-lg p-2 flex flex-wrap gap-2 shadow-sm justify-left">
                 <button
                     type="button"
                     onClick={addBold}
@@ -177,8 +177,14 @@ const Tiptap = ({ content, onChange }) => {
 
                 <div className="w-full max-w-4xl mx-auto">
                 <EditorContent 
+                    key={editorKey}
                     editor={editor} 
-                    className="bg-gray-100 border border-t-0 border-gray-200 rounded-b-lg p-4"
+                    className="border border-gray-300 
+                        focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
+                        hover:border-gray-400 
+                        transition-colors duration-200
+                        shadow-sm sm:text-sm p-4
+                        rounded-b-lg"
                 />
             
                     <style jsx global>{`

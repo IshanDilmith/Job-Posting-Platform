@@ -7,6 +7,7 @@ import { useParams } from 'next/navigation'
 import JobApply from '@/components/jobApplyForm'
 import toast, { Toaster } from 'react-hot-toast';
 import NavBar from '@/components/NavBar'
+import Footer from '@/components/footer'
 
 export default function JobDetails() {
     const router = useRouter();
@@ -158,6 +159,7 @@ export default function JobDetails() {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     )
 }
